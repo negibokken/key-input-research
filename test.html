@@ -1,0 +1,27 @@
+<html>
+  <head></head>
+  <body>
+    <input id="foo" type="text" value="" />
+    <script>
+      var onComposition = false;
+      var input = document.getElementById("foo");
+
+      input.addEventListener('keyup', function (e) {
+        if (onComposition) return;
+        input.addEventListener('keydown', function (e) {
+          if (e.keyCode === 13) {
+            console.log(e.target.value);
+          }
+          e.preventDefault();
+        });
+        e.preventDefault();
+      });
+      input.addEventListener('compositionstart', function () {
+          onComposition = true;
+      });
+      input.addEventListener('compositionend', function () {
+          onComposition = false;
+      });
+    </script>
+  </body>
+</html>
