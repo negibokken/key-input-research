@@ -1,26 +1,43 @@
 <html>
   <head></head>
   <body>
+    <h1>日本語入力の確定とその他のEnterを分けたい</h1>
+    <ul>
+      <li>アルファベットの場合は一回だけEnterで確定させたい</li>
+      <li>ただ、日本語変換の場合は変換確定後にもう一回Enterで確定させたい</li>
+    </ul>
     <input id="foo" type="text" value="" />
+    <ul id="message"></ul>
     <script>
       var onComposition = false;
       var input = document.getElementById("foo");
+      var decision = 0;
+      var compositted = false;
+      var $message = document.getElementById("message");
 
       input.addEventListener('keyup', function (e) {
         if (onComposition) return;
-        input.addEventListener('keydown', function (e) {
-          if (e.keyCode === 13) {
-            console.log(e.target.value);
-          }
-          e.preventDefault();
-        });
-        e.preventDefault();
+        // Enter じゃなければリターンする
+        if (e.keyCode !== 13) { return; }
+
+        // 確定のときのエンターは無視する
+        if (compositted && decision === 0 ) { decision++; return; }
+
+        // 視覚化するために li 要素を追加する
+        var $li = document.createElement('li');
+        $li.innerText = e.target.value;
+        $message.appendChild($li)
+        console.log(e.target.value);
+        compositted = false;
+        decision = 0;
       });
       input.addEventListener('compositionstart', function () {
           onComposition = true;
+          compositted = false;
       });
       input.addEventListener('compositionend', function () {
           onComposition = false;
+          compositted = true;
       });
     </script>
   </body>
